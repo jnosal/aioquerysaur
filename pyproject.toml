@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "aioquerysaur"
+version = "0.1.0"
+description = "package inspired by aiosql, for research use only"
+license = "MIT"
+readme = "README.rst"
+homepage = "https://github.com/jnosal/aioquerysaur"
+repository = "https://github.com/jnosal/aioquerysaur"
+authors = ["Jacek Nosal <nosaljacek@gmail.com>"]
+keywords = ["SQL", "asyncio"]
+classifiers = [
+    "Environment :: Console",
+    "Framework :: Flake8",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Documentation",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+include = [
+    "LICENSE",
+]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+typing-extensions = "^3.7.4"
+
+[tool.poetry.dev-dependencies]
+pytest = "^4.6"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
