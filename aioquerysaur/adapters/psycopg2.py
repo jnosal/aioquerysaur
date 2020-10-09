@@ -18,7 +18,6 @@ def replacer(match):
 
 
 class PsycoPG2Adapter:
-
     @staticmethod
     def process_sql(_query_name, _op_type, sql):
         return _VAR_PATTERN.sub(replacer, sql)
@@ -30,5 +29,7 @@ class PsycoPG2Adapter:
             results = cur.fetchall()
             if record_class is not None:
                 column_names = [c.name for c in cur.description]
-                results = [record_class(**dict(zip(column_names, row))) for row in results]
+                results = [
+                    record_class(**dict(zip(column_names, row))) for row in results
+                ]
         return results

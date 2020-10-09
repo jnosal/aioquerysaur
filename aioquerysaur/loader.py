@@ -11,7 +11,7 @@ from .queries import QueriesContainer
 
 
 _ADAPTERS: Dict[str, Callable[..., DriverAdapterProtocol]] = {
-    'psycopg2': PsycoPG2Adapter
+    "psycopg2": PsycoPG2Adapter
 }
 
 
@@ -22,7 +22,9 @@ def _make_driver_adapter(
         try:
             driver_adapter = _ADAPTERS[driver_adapter]
         except KeyError:
-            raise ValueError(f"Encountered unregistered driver_adapter: {driver_adapter}")
+            raise ValueError(
+                f"Encountered unregistered driver_adapter: {driver_adapter}"
+            )
 
     return driver_adapter()
 
@@ -33,7 +35,9 @@ class Patterns:
 
 
 class QueryLoader:
-    def __init__(self, driver_adapter: DriverAdapterProtocol, record_classes: Optional[Dict]):
+    def __init__(
+        self, driver_adapter: DriverAdapterProtocol, record_classes: Optional[Dict]
+    ):
         self.driver_adapter = driver_adapter
         self.record_classes = record_classes if record_classes is not None else {}
 
@@ -42,7 +46,7 @@ class QueryLoader:
         query_name = lines[0].replace("-", "_")
         operation_type = SQLOperationType.SELECT
 
-        sql = '\n'.join(lines[1:])
+        sql = "\n".join(lines[1:])
 
         if not Patterns.VALID_QUERY.match(query_name) or not query_name:
             raise SQLParseException(
@@ -84,7 +88,9 @@ class QueryLoader:
                     query_data_tree[child_name] = child_query_data_tree
                 else:
                     # This should be practically unreachable.
-                    raise SQLLoadException(f"The path must be a directory or file, got {p}")
+                    raise SQLLoadException(
+                        f"The path must be a directory or file, got {p}"
+                    )
             return query_data_tree
 
         return _recurse_load_query_data_tree(dir_path)
@@ -94,7 +100,7 @@ def load_from_str(
     sql: str,
     driver_adapter: Union[str, Callable[..., DriverAdapterProtocol]],
     loader_cls: Type[QueryLoader] = QueryLoader,
-    queries_cls: Type[QueriesContainer] = QueriesContainer
+    queries_cls: Type[QueriesContainer] = QueriesContainer,
 ):
     adapter = _make_driver_adapter(driver_adapter)
     query_loader = loader_cls(adapter, record_classes=None)
@@ -106,7 +112,7 @@ def load_from_file(
     sql_path: Union[str, Path],
     driver_adapter: Union[str, Callable[..., DriverAdapterProtocol]],
     loader_cls: Type[QueryLoader] = QueryLoader,
-    queries_cls: Type[QueriesContainer] = QueriesContainer
+    queries_cls: Type[QueriesContainer] = QueriesContainer,
 ):
     path = Path(sql_path)
 
@@ -123,17 +129,19 @@ def load_from_file(
         query_data_tree = query_loader.load_query_data_from_dir(path)
         return queries_cls(adapter).load_from_tree(query_data_tree)
     else:
-        raise SQLLoadException(f"The sql_path must be a directory or file, got {sql_path}")
+        raise SQLLoadException(
+            f"The sql_path must be a directory or file, got {sql_path}"
+        )
 
 
 def load_here(
     driver_adapter: Union[str, Callable[..., DriverAdapterProtocol]],
     loader_cls: Type[QueryLoader] = QueryLoader,
-    queries_cls: Type[QueriesContainer] = QueriesContainer
+    queries_cls: Type[QueriesContainer] = QueriesContainer,
 ):
     return load_from_file(
         sql_path=Path.cwd(),
         driver_adapter=driver_adapter,
         loader_cls=loader_cls,
-        queries_cls=queries_cls
+        queries_cls=queries_cls,
     )

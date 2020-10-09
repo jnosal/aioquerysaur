@@ -1,7 +1,13 @@
 from types import MethodType
 from typing import Any, Callable, List, Tuple, Set, cast
 
-from .models import DriverAdapterProtocol, QueryDatum, QueryDataTree, QueryFn, SQLOperationType
+from .models import (
+    DriverAdapterProtocol,
+    QueryDatum,
+    QueryDataTree,
+    QueryFn,
+    SQLOperationType,
+)
 
 
 def _params(args, kwargs):
@@ -22,10 +28,12 @@ def _make_sync_fn(query_datum: QueryDatum) -> QueryFn:
     query_name, operation_type, sql, record_class = query_datum
 
     if operation_type == SQLOperationType.SELECT:
+
         def fn(self: QueriesContainer, conn, *args, **kwargs):
             return self.driver_adapter.select(
                 conn, query_name, sql, _params(args, kwargs), record_class
             )
+
     else:
         raise ValueError(f"Unknown operation_type: {operation_type}")
 
@@ -36,12 +44,18 @@ def _make_async_fn(fn: QueryFn) -> QueryFn:
     async def afn(self: QueriesContainer, conn, *args, **kwargs):
         return await fn(self, conn, *args, **kwargs)
 
-    return _query_fn(afn, fn.__name__, fn.__doc__,)
+    return _query_fn(
+        afn,
+        fn.__name__,
+        fn.__doc__,
+    )
 
 
 def _make_ctx_mgr(fn: QueryFn) -> QueryFn:
     def ctx_mgr(self, conn, *args, **kwargs):
-        return self.driver_adapter.select_cursor(conn, fn.__name__, fn.sql, _params(args, kwargs))
+        return self.driver_adapter.select_cursor(
+            conn, fn.__name__, fn.sql, _params(args, kwargs)
+        )
 
     return _query_fn(ctx_mgr, f"{fn.__name__}_cursor", fn.__doc__)
 
@@ -61,7 +75,7 @@ def _create_methods(query_datum: QueryDatum, is_aio: bool) -> List[Tuple[str, Qu
 
 class QueriesContainer:
     """
-        Dynamic methods build from SQL queries
+    Dynamic methods build from SQL queries
     """
 
     def __init__(self, driver_adapter: DriverAdapterProtocol):
@@ -97,7 +111,9 @@ class QueriesContainer:
     def load_from_tree(self, query_data_tree: QueryDataTree):
         for key, value in query_data_tree.items():
             if isinstance(value, dict):
-                self.add_child_queries(key, QueriesContainer(self.driver_adapter).load_from_tree(value))
+                self.add_child_queries(
+                    key, QueriesContainer(self.driver_adapter).load_from_tree(value)
+                )
             else:
                 self.add_queries(_create_methods(value, self.is_aio))
         return self
