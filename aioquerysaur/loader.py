@@ -1,9 +1,9 @@
-from enum import Enum
-from typing import Callable, Dict, Optional, Type, Union
+from typing import Callable, Type, Union
 import re
 from pathlib import Path
 from typing import Dict, List, Optional
 
+from .adapters.aiosqlite import AioSQLiteAdapter
 from .adapters.sqlite3 import SQLite3DriverAdapter
 from .adapters.psycopg2 import PsycoPG2Adapter
 from .exceptions import SQLParseException, SQLLoadException
@@ -14,6 +14,7 @@ from .queries import QueriesContainer
 _ADAPTERS: Dict[str, Callable[..., DriverAdapterProtocol]] = {
     "psycopg2": PsycoPG2Adapter,
     "sqlite3": SQLite3DriverAdapter,
+    "aiosqlite": AioSQLiteAdapter,
 }
 
 

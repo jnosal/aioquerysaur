@@ -40,6 +40,11 @@ def test_load_from_str_correct_query_datum_when_no_record_class(sql):
     assert len(queries.available) > 0
 
 
+def test_raises_value_error_when_incorrect_backend(sql):
+    with pytest.raises(ValueError):
+        load_from_str(sql, "i-dont-exist")
+
+
 def test_load_from_file_raises_exception_when_file_does_not_exist():
     with pytest.raises(SQLLoadException):
         load_from_file("i-dont-exist", "psycopg2")
