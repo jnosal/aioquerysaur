@@ -4,6 +4,7 @@ import re
 from pathlib import Path
 from typing import Dict, List, Optional
 
+from .adapters.sqlite3 import SQLite3DriverAdapter
 from .adapters.psycopg2 import PsycoPG2Adapter
 from .exceptions import SQLParseException, SQLLoadException
 from .models import QueryDatum, QueryDataTree, SQLOperationType, DriverAdapterProtocol
@@ -11,7 +12,8 @@ from .queries import QueriesContainer
 
 
 _ADAPTERS: Dict[str, Callable[..., DriverAdapterProtocol]] = {
-    "psycopg2": PsycoPG2Adapter
+    "psycopg2": PsycoPG2Adapter,
+    "sqlite3": SQLite3DriverAdapter,
 }
 
 
