@@ -1,4 +1,5 @@
 from enum import Enum
+from pathlib import Path
 from typing import (
     Any,
     Callable,
@@ -65,3 +66,21 @@ class AsyncDriverAdapterProtocol(Protocol):
 
 
 DriverAdapterProtocol = Union[SyncDriverAdapterProtocol, AsyncDriverAdapterProtocol]
+
+
+class FileQueryLoaderProtocol(Protocol):
+    def __init__(
+        self, driver_adapter: DriverAdapterProtocol, record_classes: Optional[Dict]
+    ):
+        ...
+
+    def load_query_data_from_file(self, file_path: Path) -> List[QueryDatum]:
+        ...
+
+    def load_query_data_from_dir(self, dir_path: Path) -> QueryDataTree:
+        ...
+
+
+class TextQueryLoaderProtocol(FileQueryLoaderProtocol):
+    def load_query_data_from_sql(self, sql: str) -> List[QueryDatum]:
+        ...

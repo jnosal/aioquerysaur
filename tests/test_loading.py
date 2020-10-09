@@ -67,7 +67,7 @@ def test_load_file(mocker, sql_file):
 
 
 def test_load_here(mocker):
-    mock_load_from_file = mocker.patch("aioquerysaur.loader.load_from_file")
+    mock_load_from_file = mocker.patch("aioquerysaur.load_from_file")
     load_here("psycopg2")
     args, kwargs = mock_load_from_file.call_args
 
