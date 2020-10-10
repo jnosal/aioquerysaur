@@ -9,6 +9,12 @@ class Patterns:
     QUERY_NAME_DEFINITION = re.compile(r"--\s*name\s*:\s*")
 
 
+class DescriptionSuffix:
+    SELECT_ONE = "$"
+    INSERT_UPDATE_DELETE = ">"
+    INSERT_UPDATE_DELETE_MANY = ">>"
+
+
 class TextLoader:
     def __init__(self, driver_adapter, record_classes):
         self.driver_adapter = driver_adapter
@@ -17,7 +23,18 @@ class TextLoader:
     def _make_query_datum(self, query_str):
         lines = [line.strip() for line in query_str.strip().splitlines()]
         query_name = lines[0].replace("-", "_")
-        operation_type = SQLOperationType.SELECT
+
+        if query_name.endswith(DescriptionSuffix.SELECT_ONE):
+            operation_type = SQLOperationType.SELECT_ONE
+            query_name = query_name[:-1]
+        elif query_name.endswith(DescriptionSuffix.INSERT_UPDATE_DELETE_MANY):
+            operation_type = SQLOperationType.INSERT_UPDATE_DELETE_MANY
+            query_name = query_name[:-2]
+        elif query_name.endswith(DescriptionSuffix.INSERT_UPDATE_DELETE):
+            operation_type = SQLOperationType.INSERT_UPDATE_DELETE
+            query_name = query_name[:-1]
+        else:
+            operation_type = SQLOperationType.SELECT
 
         sql = "\n".join(lines[1:])
 

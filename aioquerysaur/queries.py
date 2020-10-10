@@ -34,6 +34,20 @@ def _make_sync_fn(query_datum: QueryDatum) -> QueryFn:
                 conn, query_name, sql, _params(args, kwargs), record_class
             )
 
+    elif operation_type == SQLOperationType.SELECT_ONE:
+
+        def fn(self: QueriesContainer, conn, *args, **kwargs):
+            return self.driver_adapter.select_one(
+                conn, query_name, sql, _params(args, kwargs), record_class
+            )
+
+    elif operation_type == SQLOperationType.INSERT:
+
+        def fn(self: QueriesContainer, conn, *args, **kwargs):
+            return self.driver_adapter.insert(
+                conn, query_name, sql, _params(args, kwargs)
+            )
+
     else:
         raise ValueError(f"Unknown operation_type: {operation_type}")
 

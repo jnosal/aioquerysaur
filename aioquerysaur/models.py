@@ -15,6 +15,9 @@ from typing_extensions import Protocol
 
 class SQLOperationType(Enum):
     SELECT = 1
+    SELECT_ONE = 2
+    INSERT_UPDATE_DELETE = 3
+    INSERT_UPDATE_DELETE_MANY = 4
 
 
 class QueryDatum(NamedTuple):
@@ -49,6 +52,16 @@ class SyncDriverAdapterProtocol(Protocol):
     ) -> List:
         ...
 
+    def select_one(
+        self,
+        conn: Any,
+        query_name: str,
+        sql: str,
+        parameters: Union[List, Dict],
+        record_class: Optional[Callable],
+    ) -> Optional[Any]:
+        ...
+
 
 class AsyncDriverAdapterProtocol(Protocol):
     def process_sql(self, query_name: str, op_type: SQLOperationType, sql: str) -> str:
@@ -62,6 +75,16 @@ class AsyncDriverAdapterProtocol(Protocol):
         parameters: Union[List, Dict],
         record_class: Optional[Callable],
     ) -> List:
+        ...
+
+    async def select_one(
+        self,
+        conn: Any,
+        query_name: str,
+        sql: str,
+        parameters: Union[List, Dict],
+        record_class: Optional[Callable],
+    ) -> Optional[Any]:
         ...
 
 
