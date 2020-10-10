@@ -62,6 +62,16 @@ class SyncDriverAdapterProtocol(Protocol):
     ) -> Optional[Any]:
         ...
 
+    def insert_update_delete(
+        self, conn: Any, query_name: str, sql: str, parameters: Union[List, Dict]
+    ):
+        ...
+
+    def insert_update_delete_many(
+        self, conn: Any, query_name: str, sql: str, parameters: Union[List, Dict]
+    ):
+        ...
+
 
 class AsyncDriverAdapterProtocol(Protocol):
     def process_sql(self, query_name: str, op_type: SQLOperationType, sql: str) -> str:
@@ -85,6 +95,16 @@ class AsyncDriverAdapterProtocol(Protocol):
         parameters: Union[List, Dict],
         record_class: Optional[Callable],
     ) -> Optional[Any]:
+        ...
+
+    async def insert_update_delete(
+        self, conn: Any, query_name: str, sql: str, parameters: Union[List, Dict]
+    ):
+        ...
+
+    async def insert_update_delete_many(
+        self, conn: Any, query_name: str, sql: str, parameters: Union[List, Dict]
+    ):
         ...
 
 

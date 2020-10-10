@@ -41,10 +41,17 @@ def _make_sync_fn(query_datum: QueryDatum) -> QueryFn:
                 conn, query_name, sql, _params(args, kwargs), record_class
             )
 
-    elif operation_type == SQLOperationType.INSERT:
+    elif operation_type == SQLOperationType.INSERT_UPDATE_DELETE:
 
         def fn(self: QueriesContainer, conn, *args, **kwargs):
-            return self.driver_adapter.insert(
+            return self.driver_adapter.insert_update_delete(
+                conn, query_name, sql, _params(args, kwargs)
+            )
+
+    elif operation_type == SQLOperationType.INSERT_UPDATE_DELETE_MANY:
+
+        def fn(self: QueriesContainer, conn, *args, **kwargs):
+            return self.driver_adapter.insert_update_delete_many(
                 conn, query_name, sql, _params(args, kwargs)
             )
 

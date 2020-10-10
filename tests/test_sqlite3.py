@@ -19,3 +19,15 @@ def test_connect_to_sqlite_db_and_select_items(sql, sqlite3_conn):
 
         items1 = queries.get_list(conn=sqlite3_conn, flag=True)
         assert len(items1) == 1
+
+
+def test_connect_to_sqlite_db_and_insert_item(sql, sqlite3_conn):
+    queries = load_from_str(sql, "sqlite3")
+
+    with sqlite3_conn:
+        items1 = queries.get_list(conn=sqlite3_conn, flag=True)
+        assert len(items1) == 1
+
+        queries.create_item(conn=sqlite3_conn, flag=True, revealed=False, title="bsd")
+        items1 = queries.get_list(conn=sqlite3_conn, flag=True)
+        assert len(items1) == 2

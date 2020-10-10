@@ -11,3 +11,14 @@ order by revealed desc;
     from items
    where flag = :flag
 order by revealed desc;
+
+-- name: create_item>
+insert into items (
+  title,
+  revealed,
+  flag
+) values (
+  :title,
+  :revealed,
+  :flag
+);
