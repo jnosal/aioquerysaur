@@ -10,9 +10,6 @@ from .adapters.psycopg2 import PsycoPG2Adapter
 from .loaders.text import TextLoader
 from .exceptions import SQLParseException, SQLLoadException
 from .models import (
-    QueryDatum,
-    QueryDataTree,
-    SQLOperationType,
     DriverAdapterProtocol,
     FileQueryLoaderProtocol,
     TextQueryLoaderProtocol,
@@ -51,7 +48,7 @@ def _make_loader_cls(
 ) -> Union[Type[FileQueryLoaderProtocol], Type[TextQueryLoaderProtocol]]:
     if isinstance(loader, str):
         try:
-            driver_adapter = _LOADERS[loader]
+            loader = _LOADERS[loader]
         except KeyError:
             raise ValueError(f"Encountered unregistered loader: {loader}")
 
