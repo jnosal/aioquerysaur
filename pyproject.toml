@@ -6,7 +6,7 @@ license = "MIT"
 readme = "README.rst"
 homepage = "https://github.com/jnosal/aioquerysaur"
 repository = "https://github.com/jnosal/aioquerysaur"
-authors = ["Jacek Nosal <nosaljacek@gmail.com>"]
+authors = ["Jacek Nosal <jacek.nosal@outlook.com>"]
 keywords = ["SQL", "asyncio"]
 classifiers = [
     "Environment :: Console",
